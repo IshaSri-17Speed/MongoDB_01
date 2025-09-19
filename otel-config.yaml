@@ -1,0 +1,20 @@
+receivers:
+  mongodb:
+    collection_interval: 10s
+    hosts:
+      - endpoint: "mongo:27017/?authSource=admin"
+    username: "oteluser"
+    password: "otelpassword"
+    tls:
+      insecure: true
+      insecure_skip_verify: true
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:9464"
+
+service:
+  pipelines:
+    metrics:
+      receivers: [mongodb]
+      exporters: [prometheus]

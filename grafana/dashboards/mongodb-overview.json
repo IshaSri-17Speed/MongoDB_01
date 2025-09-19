@@ -1,0 +1,33 @@
+{
+  "id": null,
+  "title": "MongoDB Overview",
+  "timezone": "browser",
+  "schemaVersion": 36,
+  "version": 1,
+  "panels": [
+    {
+      "type": "graph",
+      "title": "MongoDB Connections",
+      "targets": [
+        {
+          "expr": "mongodb_connections_current",
+          "legendFormat": "connections",
+          "interval": ""
+        }
+      ],
+      "id": 1
+    },
+    {
+      "type": "graph",
+      "title": "MongoDB Operations",
+      "targets": [
+        {
+          "expr": "rate(mongodb_op_counters_total[1m])",
+          "legendFormat": "{{op}}",
+          "interval": ""
+        }
+      ],
+      "id": 2
+    }
+  ]
+}

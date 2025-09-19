@@ -1,0 +1,41 @@
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpass123
+    ports:
+      - "27017:27017"
+
+  otelcol:
+    image: otel/opentelemetry-collector-contrib:0.118.0
+    container_name: otelcol
+    depends_on:
+      - mongo
+    volumes:
+      - ./otel-config.yaml:/etc/otelcol/config.yaml:ro
+      - ./otel-start.sh:/otel-start.sh  # kept as in your previous file
+    command: ["--config=/etc/otelcol/config.yaml"]
+    ports:
+      - "9464:9464" # Prometheus scrape endpoint
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
